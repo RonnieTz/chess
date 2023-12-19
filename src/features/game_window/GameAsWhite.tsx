@@ -5,7 +5,6 @@ import Piece from "../../components/Piece";
 import { setSelectPiece, movePieceinUI } from "../../redux/chessSlice";
 import { movePiece } from "../../redux/movePiece";
 
-const { game, line, box, dark, light, selected, possible } = styles;
 
 const GameAsWhite = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,19 +36,19 @@ const GameAsWhite = () => {
   };
 
   return (
-    <div className={game}>
+    <div className={styles.game}>
       {_game &&
         _game.history[_game.history.length - roundIndex].map((x, i) => (
-          <div key={i} className={line}>
+          <div key={i} className={styles.line}>
             {x.map((y, j) => (
               <div
                 onClick={() => handleClick(i, j)}
                 key={j}
-                className={`${box} ${(i + j) % 2 ? dark : light} ${
-                  y.selected ? selected : null
+                className={`${styles.box} ${(i + j) % 2 ? styles.dark : styles.light} ${
+                  y.selected ? styles.selected : null
                 } ${
                   legalMoves.some(({ x, y }) => x === i && y === j)
-                    ? possible
+                    ? styles.possible
                     : null
                 }`}
               >

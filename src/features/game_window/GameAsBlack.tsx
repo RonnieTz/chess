@@ -6,7 +6,6 @@ import { setSelectPiece, movePieceinUI } from "../../redux/chessSlice";
 import { movePiece } from "../../redux/movePiece";
 import { reverse_X } from "../../utilities/reverse_X";
 
-const { game, line, box, dark, light, selected, possible } = styles;
 
 const GameAsBlack = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,21 +37,21 @@ const GameAsBlack = () => {
   };
 
   return (
-    <div className={game}>
+    <div className={styles.game}>
       {_game &&
         [..._game.history[_game.history.length - roundIndex]]
           .reverse()
           .map((x, i) => (
-            <div key={i} className={line}>
+            <div key={i} className={styles.line}>
               {x.map((y, j) => (
                 <div
                   onClick={() => handleClick(reverse_X(i), j)}
                   key={j}
-                  className={`${box} ${(reverse_X(i) + j) % 2 ? dark : light} ${
-                    y.selected ? selected : null
+                  className={`${styles.box} ${(reverse_X(i) + j) % 2 ? styles.dark : styles.light} ${
+                    y.selected ? styles.selected : null
                   } ${
                     legalMoves.some(({ x, y }) => x === reverse_X(i) && y === j)
-                      ? possible
+                      ? styles.possible
                       : null
                   }`}
                 >

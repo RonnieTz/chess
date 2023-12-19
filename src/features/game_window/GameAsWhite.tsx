@@ -1,4 +1,4 @@
-import styles from "./Game.module.css";
+import styles from "./game.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
 import Piece from "../../components/Piece";

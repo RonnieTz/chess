@@ -4,6 +4,8 @@ export type BoxType = {
   selected: boolean;
   color: string | null;
   legalMoves: { x: number; y: number }[];
+  indexRow?: string | undefined;
+  indexCol?: number | undefined;
 };
 
 export type BoardType = BoxType[][];

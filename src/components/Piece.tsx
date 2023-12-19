@@ -1,4 +1,4 @@
-import styles from "../features/game.module.css";
+import styles from "../features/game_window/game.module.css";
 
 const { img } = styles;
 

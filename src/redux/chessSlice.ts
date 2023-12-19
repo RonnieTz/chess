@@ -15,11 +15,17 @@ const chessSlice = createSlice({
         state.legalMoves = [];
       }
     },
+    resetGame: (state, _action) => {
+      state.roundIndex = 1;
+      if (state.legalMoves) {
+        state.legalMoves = [];
+      }
+    },
     setSelectPiece: (state, action) => {
       const { x, y }: { x: number; y: number } = action.payload;
       const color = state.game?.board[x][y].color;
 
-      if (!state.game?.selected && state.game) {
+      if (!state.game?.selected && state.game && state.roundIndex === 1) {
         if (color === state.game?.playerTurn) {
           state.game.selected = { x, y };
           state.game.board[x][y].selected = true;
@@ -66,7 +72,16 @@ const chessSlice = createSlice({
         state.game.board[from.x][from.y].selected = false;
         state.game.selected = null;
         state.legalMoves = [];
+        state.game.history.push(state.game.board);
       }
+    },
+
+    setWindowMode: (state, action) => {
+      state.windowMode = action.payload;
+    },
+
+    setRoundIndex: (state, action) => {
+      state.roundIndex = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -79,6 +94,12 @@ const chessSlice = createSlice({
   },
 });
 
-export const { setSelectPiece, unSelectPiece, movePieceinUI } =
-  chessSlice.actions;
+export const {
+  setSelectPiece,
+  unSelectPiece,
+  movePieceinUI,
+  setWindowMode,
+  setRoundIndex,
+  resetGame,
+} = chessSlice.actions;
 export default chessSlice.reducer;

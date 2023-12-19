@@ -8,7 +8,7 @@ import { getLegalMoves } from "./utilities/getLegalMoves.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const liveGames: Game[] = [];
+let liveGames: Game | null = null;
 
 const app = express();
 app.use(cors());
@@ -21,18 +21,18 @@ app.post("/move-piece", (req, res) => {
     move: { x: moveX, y: moveY },
     to: { x: toX, y: toY },
   } = req.body;
-  const index = liveGames.findIndex((game) => game.name === name);
-  liveGames[index].movePiece(moveX, moveY, toX, toY);
-  liveGames[index].findMoves();
-  liveGames[index].filterLegalMoves();
-  res.send(liveGames[index].getGame());
+  if (liveGames) {
+    liveGames.movePiece(moveX, moveY, toX, toY);
+    liveGames.findMoves();
+    liveGames.filterLegalMoves();
+    res.send(liveGames.getGame());
+  }
 });
-const game = new Game("Player 1", "Player 2");
-liveGames.push(game);
-game.findMoves();
 
 app.get("/game", (req, res) => {
-  res.send(game.getGame());
+  liveGames = new Game("Player 1", "Player 2");
+  liveGames.findMoves();
+  res.send(liveGames.getGame());
 });
 
 app.get("/*", (req, res) => {

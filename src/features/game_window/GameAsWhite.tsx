@@ -1,33 +1,19 @@
 import styles from "./Game.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../redux/store";
-import { fetchGame } from "../redux/fetchGame";
-import { useEffect } from "react";
-import Piece from "../components/Piece";
-import { setSelectPiece, movePieceinUI } from "../redux/chessSlice";
-import { movePiece } from "../redux/movePiece";
-import { reverse_X } from "../utilities/reverse_X";
-import { cloneDeepWith } from "lodash";
+import { RootState, AppDispatch } from "../../redux/store";
+import Piece from "../../components/Piece";
+import { setSelectPiece, movePieceinUI } from "../../redux/chessSlice";
+import { movePiece } from "../../redux/movePiece";
 
 const { game, line, box, dark, light, selected, possible } = styles;
 
-const Game = () => {
+const GameAsWhite = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { game: _game, legalMoves } = useSelector(
-    (state: RootState) => state.chess
-  );
-  const fullGame = () => {
-    if (_game) {
-      const history = cloneDeepWith(_game.history);
-      return [...history!, _game.board];
-    }
-
-    return [];
-  };
-
-  useEffect(() => {
-    dispatch(fetchGame());
-  }, []);
+  const {
+    game: _game,
+    legalMoves,
+    roundIndex,
+  } = useSelector((state: RootState) => state.chess);
 
   const handleClick = (x: number, y: number) => {
     dispatch(setSelectPiece({ x, y }));
@@ -53,20 +39,34 @@ const Game = () => {
   return (
     <div className={game}>
       {_game &&
-        [...fullGame()[fullGame().length - 1]].reverse().map((x, i) => (
+        _game.history[_game.history.length - roundIndex].map((x, i) => (
           <div key={i} className={line}>
             {x.map((y, j) => (
               <div
-                onClick={() => handleClick(reverse_X(i), j)}
+                onClick={() => handleClick(i, j)}
                 key={j}
-                className={`${box} ${(reverse_X(i) + j) % 2 ? dark : light} ${
+                className={`${box} ${(i + j) % 2 ? dark : light} ${
                   y.selected ? selected : null
                 } ${
-                  legalMoves.some(({ x, y }) => x === reverse_X(i) && y === j)
+                  legalMoves.some(({ x, y }) => x === i && y === j)
                     ? possible
                     : null
                 }`}
               >
+                <p
+                  className={`${
+                    i === 7 ? styles.index_row_bottom : styles.index_row_top
+                  } ${styles.index}`}
+                >
+                  {y.indexRow}
+                </p>
+                <p
+                  className={`${
+                    j === 7 ? styles.index_col_right : styles.index_col_left
+                  } ${styles.index}`}
+                >
+                  {y.indexCol}
+                </p>
                 <Piece piece={y.piece} color={y.color} />
               </div>
             ))}
@@ -75,4 +75,4 @@ const Game = () => {
     </div>
   );
 };
-export default Game;
+export default GameAsWhite;

@@ -1,9 +1,9 @@
-import Game from "./features/Game";
+import Game_Window from "./features/game_window/Window";
 
 function App() {
   return (
     <>
-      <Game />
+      <Game_Window />
     </>
   );
 }
